@@ -1,40 +1,53 @@
-from enum import Enum
+from typing import Optional
 
 import requests
 
-
-class Status(Enum):
-    NEW = 1
-    BUILT = 2
-    PRODUCING = 3
-    FINISHED = 4
+from custom_types import Status
 
 
 class ApiClient:
 
-    def __init__(self):
+    def __init__(self, base_url: str = "http://localhost:3001"):
         print("Initializing...")
+        self.BASE_URL = base_url
 
-    def list_build_jobs(self):
-        print("Listing build jobs...")
-        data = requests.get("http://localhost:3001/api/production_builds")
-        for item in data.json():
-            print(item)
-
-    def filter_build_jobs_by_date(self, date1, date2, status=None):
-        print("Filtering build jobs by date...")
+    def get_build_jobs(self, date1: Optional[str] = None, date2: Optional[str] = None, status: Optional[Status] = None):
+        url = f"{self.BASE_URL}/api/production_builds"
+        if date1 and date2:
+            url += f"?startTime_gte={date1}&startTime_lte={date2}"
         if status:
-            data = requests.get(
-                f"http://localhost:3001/api/production_builds?startTime_gte={date1}&startTime_lte={date2}&status={status.name}")
-        else:
-            data = requests.get(
-                f"http://localhost:3001/api/production_builds?startTime_gte={date1}&startTime_lte={date2}")
-        for item in data.json():
-            print(item)
+            url += f"&status={status.name}"
+
+        data = requests.get(url)
+        return data
+
+    def get_build_details(self, build_id: str):
+        return requests.get(f"{self.BASE_URL}/api/production_builds/{build_id}")
+
+    def update_status(self, build_id: str, new_status: Status):
+        body = {"status": new_status.name}
+        return requests.patch(f"{self.BASE_URL}/api/production_builds/{build_id}", json=body)
+
+    def upload_slice_file(self, build_id: str, file_path: str):
+        payload = {"file": file_path}
+
+        return requests.post(f"{self.BASE_URL}/api/production_builds/{build_id}/slice", files=payload)
+
+    def download_slice_file(self, file_name: str):
+        return requests.get(f"{self.BASE_URL}/files/slices/{file_name}")
+
+    def download_part_file(self, part_id: str, file_name: str):
+        return requests.get(f"{self.BASE_URL}/files/parts/{part_id}/{file_name}")
 
 
 if __name__ == '__main__':
     client = ApiClient()
-    # client.list_build_jobs()
-    client.filter_build_jobs_by_date('2025-10-24T09:00:00Z', '2025-10-24T13:30:00Z')
-    client.filter_build_jobs_by_date('2025-10-24T09:00:00Z', '2025-10-29T13:30:00Z', Status.PRODUCING)
+    client.get_build_jobs()
+    print("------------------")
+    print(client.get_build_jobs('2025-10-24T09:00:00Z', '2025-10-24T13:30:00Z').json())
+    print("------------------")
+    print(client.get_build_jobs('2025-10-24T09:00:00Z', '2025-10-29T13:30:00Z', Status.PRODUCING))
+    print("------------------")
+    print(client.download_slice_file('bld_002.pwmb'))
+    print("------------------")
+    print(client.download_part_file('2a4d9e5f-9c2b-4b8d-8e1a-75f0b3c3d2e4', 'FIXED.obj').text)
