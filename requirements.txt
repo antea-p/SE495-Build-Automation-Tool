@@ -1,4 +1,6 @@
-requests
+requests~=2.32.3
 python-dateutil
 trimesh
-pyautogui
+pyautogui~=0.9.54
+responses~=0.25.8
+pytest~=9.0.1
