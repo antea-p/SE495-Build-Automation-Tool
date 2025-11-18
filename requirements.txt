@@ -4,3 +4,5 @@ trimesh
 pyautogui~=0.9.54
 responses~=0.25.8
 pytest~=9.0.1
+opencv-python
+pyscreeze
