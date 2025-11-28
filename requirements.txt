@@ -1,5 +1,5 @@
 requests~=2.32.3
-python-dateutil
+arrow
 trimesh
 pyautogui~=0.9.54
 responses~=0.25.8
