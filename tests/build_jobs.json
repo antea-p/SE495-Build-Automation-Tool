@@ -70,5 +70,422 @@
         ]
       }
     ]
+  },
+  {
+    "id": "bld_005",
+    "startTime": "2025-11-19T07:30:00Z",
+    "endTime": "2025-11-19T11:00:00Z",
+    "status": "FINISHED",
+    "slicePath": "/files/slices/bld_005.pwmb",
+    "batches": [
+      {
+        "quantity": 12,
+        "partId": "f4e3d2c1-b0a9-8e7d-6c5b-4a3921817161",
+        "itemId": "2025111901-0001",
+        "fileTypes": [
+          "ORIGINAL",
+          "FIXED"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "bld_006",
+    "startTime": "2025-11-20T09:00:00Z",
+    "endTime": "2025-11-20T13:30:00Z",
+    "status": "BUILT",
+    "slicePath": "/files/slices/bld_006.pwmb",
+    "batches": [
+      {
+        "quantity": 8,
+        "partId": "c7b6a5d4-e3f2-1a0b-9c8d-7e6f5a4b3c2d",
+        "itemId": "2025112001-0001",
+        "fileTypes": [
+          "ORIGINAL",
+          "PRE_SUPPORTED"
+        ]
+      },
+      {
+        "quantity": 18,
+        "partId": "9e8d7c6b-5a4f-3e2d-1c0b-9a8f7e6d5c4b",
+        "itemId": "2025112001-0002",
+        "fileTypes": [
+          "ORIGINAL",
+          "FIXED",
+          "PRE_SUPPORTED"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "bld_007",
+    "startTime": "2025-11-21T10:15:00Z",
+    "endTime": "2025-11-21T14:45:00Z",
+    "status": "PRODUCING",
+    "slicePath": "/files/slices/bld_007.pwmb",
+    "batches": [
+      {
+        "quantity": 25,
+        "partId": "1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d",
+        "itemId": "2025112101-0001",
+        "fileTypes": [
+          "ORIGINAL",
+          "PRE_SUPPORTED"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "bld_008",
+    "startTime": "2025-11-22T08:00:00Z",
+    "endTime": "2025-11-22T11:30:00Z",
+    "status": "NEW",
+    "slicePath": "/files/slices/bld_008.pwmb",
+    "batches": []
+  },
+  {
+    "id": "bld_009",
+    "startTime": "2025-11-23T13:00:00Z",
+    "endTime": "2025-11-23T17:00:00Z",
+    "status": "BUILT",
+    "slicePath": "/files/slices/bld_009.pwmb",
+    "batches": [
+      {
+        "quantity": 15,
+        "partId": "7c8d9e0f-1a2b-3c4d-5e6f-7a8b9c0d1e2f",
+        "itemId": "2025112301-0001",
+        "fileTypes": [
+          "ORIGINAL",
+          "FIXED"
+        ]
+      },
+      {
+        "quantity": 10,
+        "partId": "5e4d3c2b-1a0f-9e8d-7c6b-5a4f3e2d1c0b",
+        "itemId": "2025112301-0002",
+        "fileTypes": [
+          "ORIGINAL",
+          "PRE_SUPPORTED"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "bld_010",
+    "startTime": "2025-11-24T09:30:00Z",
+    "endTime": "2025-11-24T12:00:00Z",
+    "status": "PRODUCING",
+    "slicePath": "/files/slices/bld_010.pwmb",
+    "batches": [
+      {
+        "quantity": 7,
+        "partId": "3f2e1d0c-9b8a-7f6e-5d4c-3b2a1f0e9d8c",
+        "itemId": "2025112401-0001",
+        "fileTypes": [
+          "ORIGINAL",
+          "FIXED",
+          "PRE_SUPPORTED"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "bld_011",
+    "startTime": "2025-11-25T14:00:00Z",
+    "endTime": "2025-11-25T18:30:00Z",
+    "status": "FINISHED",
+    "slicePath": "/files/slices/bld_011.pwmb",
+    "batches": [
+      {
+        "quantity": 20,
+        "partId": "b9a8f7e6-d5c4-3b2a-1f0e-9d8c7b6a5f4e",
+        "itemId": "2025112501-0001",
+        "fileTypes": [
+          "ORIGINAL",
+          "PRE_SUPPORTED"
+        ]
+      },
+      {
+        "quantity": 12,
+        "partId": "6d5c4b3a-2f1e-0d9c-8b7a-6f5e4d3c2b1a",
+        "itemId": "2025112501-0002",
+        "fileTypes": [
+          "ORIGINAL",
+          "FIXED"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "bld_012",
+    "startTime": "2025-10-28T08:30:00Z",
+    "endTime": "2025-10-28T12:00:00Z",
+    "status": "BUILT",
+    "slicePath": "/files/slices/bld_012.pwmb",
+    "batches": [
+      {
+        "quantity": 14,
+        "partId": "e8f7a6b5-c4d3-2e1f-0a9b-8c7d6e5f4a3b",
+        "itemId": "2025102801-0001",
+        "fileTypes": [
+          "ORIGINAL",
+          "FIXED",
+          "PRE_SUPPORTED"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "bld_013",
+    "startTime": "2025-10-30T10:00:00Z",
+    "endTime": "2025-10-30T14:30:00Z",
+    "status": "FINISHED",
+    "slicePath": "/files/slices/bld_013.pwmb",
+    "batches": []
+  },
+  {
+    "id": "bld_014",
+    "startTime": "2025-11-01T07:00:00Z",
+    "endTime": "2025-11-01T10:30:00Z",
+    "status": "BUILT",
+    "slicePath": "/files/slices/bld_014.pwmb",
+    "batches": [
+      {
+        "quantity": 22,
+        "partId": "2c1b0a9f-8e7d-6c5b-4a3f-2e1d0c9b8a7f",
+        "itemId": "2025110101-0001",
+        "fileTypes": [
+          "ORIGINAL",
+          "PRE_SUPPORTED"
+        ]
+      },
+      {
+        "quantity": 9,
+        "partId": "a0f9e8d7-c6b5-4a3f-2e1d-0c9b8a7f6e5d",
+        "itemId": "2025110101-0002",
+        "fileTypes": [
+          "ORIGINAL",
+          "FIXED"
+        ]
+      },
+      {
+        "quantity": 16,
+        "partId": "4f3e2d1c-0b9a-8f7e-6d5c-4b3a2f1e0d9c",
+        "itemId": "2025110101-0003",
+        "fileTypes": [
+          "ORIGINAL",
+          "FIXED",
+          "PRE_SUPPORTED"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "bld_015",
+    "startTime": "2025-11-05T11:30:00Z",
+    "endTime": "2025-11-05T15:00:00Z",
+    "status": "NEW",
+    "slicePath": "/files/slices/bld_015.pwmb",
+    "batches": [
+      {
+        "quantity": 11,
+        "partId": "d9c8b7a6-f5e4-3d2c-1b0a-9f8e7d6c5b4a",
+        "itemId": "2025110501-0001",
+        "fileTypes": [
+          "ORIGINAL",
+          "PRE_SUPPORTED"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "bld_016",
+    "startTime": "2025-11-08T09:00:00Z",
+    "endTime": "2025-11-08T12:30:00Z",
+    "status": "PRODUCING",
+    "slicePath": "/files/slices/bld_016.pwmb",
+    "batches": [
+      {
+        "quantity": 17,
+        "partId": "7e6d5c4b-3a2f-1e0d-9c8b-7a6f5e4d3c2b",
+        "itemId": "2025110801-0001",
+        "fileTypes": [
+          "ORIGINAL",
+          "FIXED"
+        ]
+      },
+      {
+        "quantity": 13,
+        "partId": "0b9a8f7e-6d5c-4b3a-2f1e-0d9c8b7a6f5e",
+        "itemId": "2025110801-0002",
+        "fileTypes": [
+          "ORIGINAL",
+          "PRE_SUPPORTED"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "bld_017",
+    "startTime": "2025-11-12T08:00:00Z",
+    "endTime": "2025-11-12T11:00:00Z",
+    "status": "BUILT",
+    "slicePath": "/files/slices/bld_017.pwmb",
+    "batches": []
+  },
+  {
+    "id": "bld_018",
+    "startTime": "2025-11-15T13:30:00Z",
+    "endTime": "2025-11-15T17:00:00Z",
+    "status": "NEW",
+    "slicePath": "/files/slices/bld_018.pwmb",
+    "batches": [
+      {
+        "quantity": 19,
+        "partId": "8c7b6a5f-4e3d-2c1b-0a9f-8e7d6c5b4a3f",
+        "itemId": "2025111501-0001",
+        "fileTypes": [
+          "ORIGINAL",
+          "FIXED",
+          "PRE_SUPPORTED"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "bld_019",
+    "startTime": "2025-11-27T10:00:00Z",
+    "endTime": "2025-11-27T14:00:00Z",
+    "status": "FINISHED",
+    "slicePath": "/files/slices/bld_019.pwmb",
+    "batches": [
+      {
+        "quantity": 6,
+        "partId": "f5e4d3c2-b1a0-9f8e-7d6c-5b4a3f2e1d0c",
+        "itemId": "2025112701-0001",
+        "fileTypes": [
+          "ORIGINAL",
+          "PRE_SUPPORTED"
+        ]
+      },
+      {
+        "quantity": 21,
+        "partId": "1e0d9c8b-7a6f-5e4d-3c2b-1a0f9e8d7c6b",
+        "itemId": "2025112701-0002",
+        "fileTypes": [
+          "ORIGINAL",
+          "FIXED"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "bld_020",
+    "startTime": "2025-12-01T08:30:00Z",
+    "endTime": "2025-12-01T12:00:00Z",
+    "status": "PRODUCING",
+    "slicePath": "/files/slices/bld_020.pwmb",
+    "batches": [
+      {
+        "quantity": 24,
+        "partId": "3a2f1e0d-9c8b-7a6f-5e4d-3c2b1a0f9e8d",
+        "itemId": "2025120101-0001",
+        "fileTypes": [
+          "ORIGINAL",
+          "FIXED",
+          "PRE_SUPPORTED"
+        ]
+      },
+      {
+        "quantity": 8,
+        "partId": "c6b5a4f3-e2d1-0c9b-8a7f-6e5d4c3b2a1f",
+        "itemId": "2025120101-0002",
+        "fileTypes": [
+          "ORIGINAL",
+          "PRE_SUPPORTED"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "bld_021",
+    "startTime": "2025-12-05T09:00:00Z",
+    "endTime": "2025-12-05T13:30:00Z",
+    "status": "NEW",
+    "slicePath": "/files/slices/bld_021.pwmb",
+    "batches": [
+      {
+        "quantity": 5,
+        "partId": "9f8e7d6c-5b4a-3f2e-1d0c-9b8a7f6e5d4c",
+        "itemId": "2025120501-0001",
+        "fileTypes": [
+          "ORIGINAL",
+          "FIXED"
+        ]
+      },
+      {
+        "quantity": 14,
+        "partId": "7d6c5b4a-3f2e-1d0c-9b8a-7f6e5d4c3b2a",
+        "itemId": "2025120501-0002",
+        "fileTypes": [
+          "ORIGINAL",
+          "PRE_SUPPORTED"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "bld_022",
+    "startTime": "2025-12-10T07:30:00Z",
+    "endTime": "2025-12-10T11:00:00Z",
+    "status": "BUILT",
+    "slicePath": "/files/slices/bld_022.pwmb",
+    "batches": []
+  },
+  {
+    "id": "bld_023",
+    "startTime": "2025-12-15T14:00:00Z",
+    "endTime": "2025-12-15T17:30:00Z",
+    "status": "BUILT",
+    "slicePath": "/files/slices/bld_023.pwmb",
+    "batches": [
+      {
+        "quantity": 23,
+        "partId": "5c4b3a2f-1e0d-9c8b-7a6f-5e4d3c2b1a0f",
+        "itemId": "2025121501-0001",
+        "fileTypes": [
+          "ORIGINAL",
+          "FIXED",
+          "PRE_SUPPORTED"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "bld_024",
+    "startTime": "2025-12-20T10:30:00Z",
+    "endTime": "2025-12-20T14:00:00Z",
+    "status": "BUILT",
+    "slicePath": "/files/slices/bld_024.pwmb",
+    "batches": [
+      {
+        "quantity": 16,
+        "partId": "e1d0c9b8-a7f6-e5d4-c3b2-a1f0e9d8c7b6",
+        "itemId": "2025122001-0001",
+        "fileTypes": [
+          "ORIGINAL",
+          "PRE_SUPPORTED"
+        ]
+      },
+      {
+        "quantity": 11,
+        "partId": "a9f8e7d6-c5b4-a3f2-e1d0-c9b8a7f6e5d4",
+        "itemId": "2025122001-0002",
+        "fileTypes": [
+          "ORIGINAL",
+          "FIXED"
+        ]
+      }
+    ]
   }
 ]
