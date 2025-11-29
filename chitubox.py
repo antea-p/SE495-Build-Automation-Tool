@@ -1,11 +1,10 @@
 import os
-import time
 from dataclasses import astuple
 from datetime import datetime
 
 import pyautogui
 
-from custom_types import RegionBox
+from custom_types import RegionBox, HOTKEYS
 
 RESOLUTION = pyautogui.size()
 
@@ -34,47 +33,34 @@ class Chitubox:
             print(f"Couldn't click {filename}. Exception details: {e}")  # TODO: logging
             pyautogui.screenshot(f'screenshot_{datetime.now().strftime("%d-%m-%Y")}.png')
 
-    def close_bug_report(self):
-        # TODO: refine
-        try:
-            timeout = time.time() + 5
-            while time.time() <= timeout:
-                for pos in pyautogui.locateAllOnScreen("BugReport.png", grayscale=True,
-                                                       region=astuple(RegionBox.BUG_FEEDBACK.value)):
-                    if pos:
-                        pyautogui.hotkey('alt', 'f4')
-                        break
-        except pyautogui.PyAutoGUIException:
-            pass
-
     def open_file(self, filename: str):
-        pyautogui.hotkey('ctrl', 'o')
+        pyautogui.hotkey(*HOTKEYS['OPEN'])
         pyautogui.write(filename, interval=0.1)
         pyautogui.press("enter")
 
     def slice(self):
-        pyautogui.hotkey('s', 'l')
+        pyautogui.hotkey(*HOTKEYS['SLICE'])
 
     def save(self):
         self.click("Slice_v2.png", region_box=astuple(RegionBox.SLICE.value))
         pyautogui.sleep(5)
 
-        pyautogui.hotkey('ctrl', 'shift', 's')
+        pyautogui.hotkey(*HOTKEYS['SAVE'])
         pyautogui.sleep(1)
         pyautogui.press('enter')
         pyautogui.sleep(5)
 
-        pyautogui.hotkey('alt', 'f4')
+        pyautogui.hotkey(*HOTKEYS['CANCEL_PROMPT'])
         pyautogui.sleep(2)
 
         self.click("BackToModelPrepare.png", region_box=astuple(RegionBox.BACK_TO_MODEL_PREPARE.value))
         pyautogui.sleep(1)
-        pyautogui.hotkey('alt', 'f4')
+        pyautogui.hotkey(*HOTKEYS['CANCEL_PROMPT'])
         pyautogui.sleep(1)
-        pyautogui.hotkey('ctrl', 'n')
+        pyautogui.hotkey(*HOTKEYS['NEW_PROJECT'])
 
-        pyautogui.hotkey('alt', 'f4')
-        pyautogui.hotkey('ctrl', 'n')
+        pyautogui.hotkey(*HOTKEYS['CANCEL_PROMPT'])
+        pyautogui.hotkey(*HOTKEYS['NEW_PROJECT'])
 
         self.click("No.png", region_box=astuple(RegionBox.NO.value))
 
@@ -82,7 +68,6 @@ class Chitubox:
 if __name__ == '__main__':
     chitubox = Chitubox()
     pyautogui.sleep(10)
-    # chitubox.close_bug_report()
     # TODO: check if there's 'restore project files prompt', or if there's report bug prompt
     for file in os.scandir():
         if file.name.endswith(".stl"):
@@ -90,9 +75,3 @@ if __name__ == '__main__':
             pyautogui.sleep(2)
             chitubox.slice()
             chitubox.save()
-            # for file in os.scandir():
-            #     if file.name.endswith(".stl"):
-            #         chitubox.open_file(file.name)
-            #         pyautogui.sleep(2)
-            #         chitubox.slice()
-            #         chitubox.save()
