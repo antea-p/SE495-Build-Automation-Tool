@@ -4,7 +4,7 @@ from datetime import datetime
 
 import pyautogui
 
-from custom_types import RegionBox, HOTKEYS
+from custom_types import HOTKEYS, REGION_BOX
 
 RESOLUTION = pyautogui.size()
 
@@ -36,33 +36,28 @@ class Chitubox:
     def open_file(self, filename: str):
         pyautogui.hotkey(*HOTKEYS['OPEN'])
         pyautogui.write(filename, interval=0.1)
-        pyautogui.press("enter")
+        pyautogui.press(HOTKEYS['ENTER'])
 
     def slice(self):
         pyautogui.hotkey(*HOTKEYS['SLICE'])
 
     def save(self):
-        self.click("Slice_v2.png", region_box=astuple(RegionBox.SLICE.value))
+        self.click("Slice_v2.png", region_box=astuple(REGION_BOX['SLICE']))
         pyautogui.sleep(5)
 
         pyautogui.hotkey(*HOTKEYS['SAVE'])
-        pyautogui.sleep(1)
         pyautogui.press('enter')
-        pyautogui.sleep(5)
-
         pyautogui.hotkey(*HOTKEYS['CANCEL_PROMPT'])
-        pyautogui.sleep(2)
 
-        self.click("BackToModelPrepare.png", region_box=astuple(RegionBox.BACK_TO_MODEL_PREPARE.value))
-        pyautogui.sleep(1)
+    def back_to_model_prepare(self):
+        self.click("BackToModelPrepare.png", region_box=astuple(REGION_BOX['BACK_TO_MODEL_PREPARE']))
         pyautogui.hotkey(*HOTKEYS['CANCEL_PROMPT'])
-        pyautogui.sleep(1)
         pyautogui.hotkey(*HOTKEYS['NEW_PROJECT'])
 
         pyautogui.hotkey(*HOTKEYS['CANCEL_PROMPT'])
         pyautogui.hotkey(*HOTKEYS['NEW_PROJECT'])
 
-        self.click("No.png", region_box=astuple(RegionBox.NO.value))
+        self.click("No.png", region_box=astuple(REGION_BOX['NO']))
 
 
 if __name__ == '__main__':
@@ -75,3 +70,4 @@ if __name__ == '__main__':
             pyautogui.sleep(2)
             chitubox.slice()
             chitubox.save()
+            chitubox.back_to_model_prepare()
