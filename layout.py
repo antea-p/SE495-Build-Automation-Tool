@@ -6,22 +6,25 @@ from typing import List
 class Box:
     w: int
     h: int
+    filename: str = None
 
 
 @dataclass
 class Position:
     # FOR EMPTY SLOT -> (x, y) = top left corner of empty slot, (w, h) = slot size
-    # FOR PACKED SLOT -> (x, y) = top left corner of the box, (w, h) = box size
+    # FOR PACKED SLOT -> (x, y) = top left corner of the box, (w, h) = box size, filename = original model name
     x: int
     y: int
     w: int
     h: int
+    filename: str = None
 
 
 MAX_WIDTH = 123
 MAX_LENGTH = 198
 
 
+# https://observablehq.com/@mourner/simple-rectangle-packing
 def bin_packing(boxes: List[Box]) -> list[List[Position]] | None:
     area = 0
     # max_width = 0
@@ -36,23 +39,26 @@ def bin_packing(boxes: List[Box]) -> list[List[Position]] | None:
 
     for box in boxes:
         print(f"Current box: {box}")
-        for (i, slot) in enumerate(reversed(empty_slots)):
+        # https://docs.python.org/3.14/library/stdtypes.html#ranges
+        for i in range(len(empty_slots) - 1, -1, -1):
+            slot = empty_slots[i]
+
             if (box.w > MAX_WIDTH) or (box.h > MAX_LENGTH):
                 print("Box can't fit the print bed!")
-                continue
+                break
 
             if (box.w > slot.w) or (box.h > slot.h):
                 print("Box too big!")
                 continue
 
             print("Placing the box...")
-            occupied.append(Position(x=slot.x, y=slot.y, w=box.w, h=box.h))
+            occupied.append(Position(x=slot.x, y=slot.y, w=box.w, h=box.h, filename=box.filename))
             print(f"Packed! Position: {Position(x=slot.x, y=slot.y, w=box.w, h=box.h)}")
 
             if (box.w == slot.w) and (box.h == slot.h):
                 last = empty_slots.pop()
                 if i < len(empty_slots):
-                    slot = last
+                    empty_slots[i] = last
 
             elif box.h == slot.h:
                 slot.x += box.w
