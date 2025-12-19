@@ -27,7 +27,7 @@ MAX_LENGTH = 198
 
 
 # https://observablehq.com/@mourner/simple-rectangle-packing
-def bin_packing(boxes: List[Box]) -> list[List[Position]] | None:
+def bin_packing(boxes: List[Box]) -> list | None:
     area = 0
     # max_width = 0
     for box in boxes:

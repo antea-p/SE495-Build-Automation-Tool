@@ -1,7 +1,11 @@
+from math import ceil
 from typing import Any
+
+import trimesh
 
 import api_client
 import service
+from layout import Box, bin_packing
 
 client = api_client.ApiClient()
 
@@ -13,33 +17,75 @@ def get_filtered_builds_3_days_span() -> list[Any] | None:
     return service.filter_and_sort_builds(builds=recent_builds, sort_key='startTime')
 
 
+def process_build(build_id: str):
+    print(f"Processing {build_id}")
+    batches = client.get_build_details(build_id=build_id).json().get('batches')
+    to_layout = []
+    for batch in batches:
+        download = client.download_part_file(batch.get('partId'), file_name='PRE_SUPPORTED.stl')
+        quantity = batch.get('quantity')
+        filename = f'{build_id}-{batch.get('partId')}.stl'
+        with open(filename, 'wb') as f:
+            f.write(download.content)
+
+            mesh = trimesh.load(filename)
+            x, y, z = mesh.bounding_box.extents
+            for _ in range(quantity):
+                to_layout.append(Box(w=ceil(y), h=ceil(x), filename=filename))
+            print(f"Downloaded {filename} with dimensions (width x length): {y} mm x {x} mm")
+
+    print(f"Build {build_id} has {len(to_layout)} boxes to layout.")
+    print("To layout: ", to_layout)
+
+    remaining_parts = True
+    layouts = []
+    result = bin_packing(to_layout)
+
+    while remaining_parts:
+        layout_ = result[0]
+        unfit_boxes = result[2]
+        layouts.append(layout_)
+        if not unfit_boxes:
+            remaining_parts = False
+        else:
+            result = bin_packing(unfit_boxes)
+
+    print(f"Build {build_id} will require {len(layouts)} print runs")
+    for layout in layouts:
+        print(layout, sep='\n')
+    print("---------------------------")
+
+    return layouts
+
+
+def create_combined_stl_file(result, id):
+    pass
+
+
 def main():
     already_seen_build_ids = set()
 
-    while True:
-        filtered_builds = get_filtered_builds_3_days_span()
-        if filtered_builds:
-            eligible_builds = [build for build in filtered_builds if build['id'] not in already_seen_build_ids]
-        else:
-            print("No builds in queue, terminating the script...")
-            return
+    filtered_builds = get_filtered_builds_3_days_span()
+    if filtered_builds:
+        remaining_builds = [build for build in filtered_builds if build['id'] not in already_seen_build_ids]
+    else:
+        print("No builds in queue, terminating the script...")
+        return
 
-        if eligible_builds:
-            for build in eligible_builds:
-                print(build)
-                print("--------------------------------")
-            highest_priority_build = eligible_builds[0]  # Because it's already sorted
+    while remaining_builds:
+        highest_priority_build = remaining_builds[0]  # Because it's already sorted
+        highest_priority_id = highest_priority_build['id']
 
-            try:
-                if highest_priority_build['id'] not in already_seen_build_ids:
-                    already_seen_build_ids.add(highest_priority_build['id'])
-                    # TODO
-                    # process_build(highest_priority_build['id'])
-                break
-            except Exception as error:
-                print(
-                    f"Build for {highest_priority_build['id']} failed, will skip to next eligible build. Error message: {error}")
-                continue
+        try:
+            # if highest_priority_id not in already_seen_build_ids:
+            already_seen_build_ids.add(highest_priority_id)
+            result = process_build(highest_priority_id)
+            create_combined_stl_file(result, highest_priority_id)
+            remaining_builds.remove(highest_priority_build)
+        except Exception as error:
+            print(
+                f"Build for {highest_priority_id} failed, will skip to next eligible build. Error message: {error}")
+            continue
 
 
 if __name__ == "__main__":
