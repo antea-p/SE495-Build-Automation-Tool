@@ -7,6 +7,7 @@ class Box:
     w: int
     h: int
     filename: str = None
+    id: int = None
 
 
 @dataclass
@@ -18,6 +19,7 @@ class Position:
     w: int
     h: int
     filename: str = None
+    id: int = None
 
 
 MAX_WIDTH = 123
@@ -30,10 +32,13 @@ def bin_packing(boxes: List[Box]) -> list[List[Position]] | None:
     # max_width = 0
     for box in boxes:
         area += box.w * box.h
-        # max_width = max(max_width, box.w)
+        # TODO: think about what to do if boxes area > max area
+        if area > (MAX_WIDTH * MAX_LENGTH):
+            print("Can't fit all of the boxes on print bed")
 
     boxes.sort(key=lambda x: x.w * x.h, reverse=True)
 
+    unfit_boxes = boxes.copy()
     empty_slots = [Position(x=0, y=0, w=MAX_WIDTH, h=MAX_LENGTH)]
     occupied = []
 
@@ -51,9 +56,10 @@ def bin_packing(boxes: List[Box]) -> list[List[Position]] | None:
                 print("Box too big!")
                 continue
 
-            print("Placing the box...")
-            occupied.append(Position(x=slot.x, y=slot.y, w=box.w, h=box.h, filename=box.filename))
-            print(f"Packed! Position: {Position(x=slot.x, y=slot.y, w=box.w, h=box.h)}")
+            # print("Placing the box...")
+            occupied.append(Position(x=slot.x, y=slot.y, w=box.w, h=box.h, filename=box.filename, id=box.id))
+            unfit_boxes.remove(box)
+            # print(f"Packed! Position: {Position(x=slot.x, y=slot.y, w=box.w, h=box.h)}")
 
             if (box.w == slot.w) and (box.h == slot.h):
                 last = empty_slots.pop()
@@ -80,8 +86,9 @@ def bin_packing(boxes: List[Box]) -> list[List[Position]] | None:
             break
     print(f"Occupied len: {len(occupied)}, occupied: {occupied})")
     print(f"Empty len: {len(empty_slots)}, empty: {empty_slots})")
+    print(f"Unfit len: {len(unfit_boxes)}, unfit: {unfit_boxes})")
 
-    return [occupied, empty_slots]
+    return [occupied, empty_slots, unfit_boxes]
 
 
 if __name__ == '__main__':
