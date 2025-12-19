@@ -38,16 +38,3 @@ class ApiClient:
 
     def download_part_file(self, part_id: str, file_name: str):
         return requests.get(f"{self.BASE_URL}/files/parts/{part_id}/{file_name}")
-
-
-if __name__ == '__main__':
-    client = ApiClient()
-    client.get_build_jobs()
-    print("------------------")
-    print(client.get_build_jobs('2025-10-24T09:00:00Z', '2025-10-24T13:30:00Z').json())
-    print("------------------")
-    print(client.get_build_jobs('2025-10-24T09:00:00Z', '2025-10-29T13:30:00Z', Status.PRODUCING))
-    print("------------------")
-    print(client.download_slice_file('bld_002.pwmb'))
-    print("------------------")
-    print(client.download_part_file('2a4d9e5f-9c2b-4b8d-8e1a-75f0b3c3d2e4', 'FIXED.obj').text)

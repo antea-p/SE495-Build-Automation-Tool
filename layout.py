@@ -7,7 +7,6 @@ class Box:
     w: int
     h: int
     filename: str = None
-    id: int = None
 
 
 @dataclass
@@ -19,7 +18,6 @@ class Position:
     w: int
     h: int
     filename: str = None
-    id: int = None
 
 
 MAX_WIDTH = 123
@@ -28,14 +26,6 @@ MAX_LENGTH = 198
 
 # https://observablehq.com/@mourner/simple-rectangle-packing
 def bin_packing(boxes: List[Box]) -> list | None:
-    area = 0
-    # max_width = 0
-    for box in boxes:
-        area += box.w * box.h
-        # TODO: think about what to do if boxes area > max area
-        if area > (MAX_WIDTH * MAX_LENGTH):
-            print("Can't fit all of the boxes on print bed")
-
     boxes.sort(key=lambda x: x.w * x.h, reverse=True)
 
     unfit_boxes = boxes.copy()
@@ -43,7 +33,6 @@ def bin_packing(boxes: List[Box]) -> list | None:
     occupied = []
 
     for box in boxes:
-        print(f"Current box: {box}")
         # https://docs.python.org/3.14/library/stdtypes.html#ranges
         for i in range(len(empty_slots) - 1, -1, -1):
             slot = empty_slots[i]
@@ -53,13 +42,10 @@ def bin_packing(boxes: List[Box]) -> list | None:
                 break
 
             if (box.w > slot.w) or (box.h > slot.h):
-                print("Box too big!")
                 continue
 
-            # print("Placing the box...")
             occupied.append(Position(x=slot.x, y=slot.y, w=box.w, h=box.h, filename=box.filename, id=box.id))
             unfit_boxes.remove(box)
-            # print(f"Packed! Position: {Position(x=slot.x, y=slot.y, w=box.w, h=box.h)}")
 
             if (box.w == slot.w) and (box.h == slot.h):
                 last = empty_slots.pop()
@@ -84,9 +70,6 @@ def bin_packing(boxes: List[Box]) -> list | None:
                 slot.y += box.h
                 slot.h -= box.h
             break
-    print(f"Occupied len: {len(occupied)}, occupied: {occupied})")
-    print(f"Empty len: {len(empty_slots)}, empty: {empty_slots})")
-    print(f"Unfit len: {len(unfit_boxes)}, unfit: {unfit_boxes})")
 
     return [occupied, empty_slots, unfit_boxes]
 
