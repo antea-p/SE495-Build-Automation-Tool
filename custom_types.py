@@ -14,6 +14,25 @@ class Status(Enum):
 
 
 @dataclass
+class Box:
+    w: int
+    l: int
+    h: int = None
+    filename: str = None
+
+
+@dataclass
+class Position:
+    # FOR EMPTY SLOT -> (x, y) = top left corner of empty slot, (w, l) = slot size
+    # FOR PACKED SLOT -> (x, y) = top left corner of the box, (w, l) = box size, filename = original model name
+    x: int
+    y: int
+    w: int
+    l: int
+    filename: str = None
+
+
+@dataclass
 class Region:
     top_left: int
     top_right: int
