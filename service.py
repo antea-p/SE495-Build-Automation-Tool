@@ -1,5 +1,9 @@
+from uuid import uuid4
+
 import arrow
+import numpy as np
 import requests.models
+import trimesh
 
 import api_client
 from custom_types import Status
@@ -48,3 +52,42 @@ def filter_and_sort_builds(builds: requests.models.Response, sort_key: str):
     filtered_builds.sort(key=lambda x: x.get(sort_key))
 
     return filtered_builds
+
+
+def apply_rotation(mesh):
+    angle = np.radians(-180)
+    direction = [0, 0, 1]
+    center = mesh.centroid
+
+    return trimesh.transformations.rotation_matrix(angle, direction, center)
+
+
+def create_combined_stl_file(result):
+    # https://github.com/mikedh/trimesh/issues/365
+    # https://stackoverflow.com/questions/72561243/rotating-trimesh-mesh-plane-object
+    for (i, print_run) in enumerate(result):
+        print(print_run)
+        uuid_ = uuid4()
+        scene = trimesh.Scene()
+        meshes = []
+
+        for (j, position) in enumerate(print_run):
+            print(f"Positon {j}: {position}")
+            mesh = trimesh.load_mesh(position.filename)
+            meshes.append(mesh)
+
+            target_position = np.array([0, 0, 0])
+            mesh.apply_translation(target_position - mesh.centroid)
+
+            mesh.apply_translation([position.x, -position.y, 0])
+            mesh.apply_transform(apply_rotation(mesh))
+
+            scene.add_geometry(mesh)
+            # scene.export(f"incomplete-printrun-{uuid_}-{i}_{j}.stl")
+            # combined_mesh.export(f"incomplete-printrun-{uuid_}-{j}.stl")
+
+        combined_mesh = trimesh.util.concatenate([meshes])
+
+        print(f"Created combined stl file for print_run {i}")
+        scene.export(f"printrun-{uuid_}.stl")
+    return combined_mesh
