@@ -54,10 +54,10 @@ def filter_and_sort_builds(builds: requests.models.Response, sort_key: str):
     return filtered_builds
 
 
-def apply_rotation(mesh):
-    angle = np.radians(-180)
+def apply_rotation(obj, degrees):
+    angle = np.radians(degrees)
     direction = [0, 0, 1]
-    center = mesh.centroid
+    center = obj.centroid
 
     return trimesh.transformations.rotation_matrix(angle, direction, center)
 
@@ -68,26 +68,33 @@ def create_combined_stl_file(result):
     for (i, print_run) in enumerate(result):
         print(print_run)
         uuid_ = uuid4()
-        scene = trimesh.Scene()
         meshes = []
+        scene = trimesh.Scene()
+        origin = np.array([0, 0, 0])
 
         for (j, position) in enumerate(print_run):
             print(f"Positon {j}: {position}")
             mesh = trimesh.load_mesh(position.filename)
-            meshes.append(mesh)
 
-            target_position = np.array([0, 0, 0])
-            mesh.apply_translation(target_position - mesh.centroid)
+            mesh.apply_translation(origin - mesh.centroid)
 
             mesh.apply_translation([position.x, -position.y, 0])
-            mesh.apply_transform(apply_rotation(mesh))
+            mesh.apply_transform(apply_rotation(mesh, 90))
+            # mesh.apply_transform(apply_rotation(mesh, 90))
 
-            scene.add_geometry(mesh)
+            # scene.add_geometry(mesh)
             # scene.export(f"incomplete-printrun-{uuid_}-{i}_{j}.stl")
             # combined_mesh.export(f"incomplete-printrun-{uuid_}-{j}.stl")
+            meshes.append(mesh)
+            scene.add_geometry(mesh)
 
-        combined_mesh = trimesh.util.concatenate([meshes])
+            # now = datetime.now()
+            # formatted = now.strftime('%Y-%m-%d-%H:%M:%S')
+            scene.export(f"incomplete-printrun-{uuid_}.stl")
+
+        # combined_mesh = trimesh.util.concatenate(meshes)
 
         print(f"Created combined stl file for print_run {i}")
+        scene.apply_transform(apply_rotation(scene, 90))
+        scene.apply_translation(origin - scene.centroid)
         scene.export(f"printrun-{uuid_}.stl")
-    return combined_mesh
