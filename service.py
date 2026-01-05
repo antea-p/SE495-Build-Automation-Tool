@@ -1,3 +1,4 @@
+from datetime import datetime
 from uuid import uuid4
 
 import arrow
@@ -54,10 +55,14 @@ def filter_and_sort_builds(builds: requests.models.Response, sort_key: str):
     return filtered_builds
 
 
+def center_of_bounding_box(mesh):
+    return mesh.bounds.mean(axis=0)
+
+
 def apply_rotation(obj, degrees):
     angle = np.radians(degrees)
     direction = [0, 0, 1]
-    center = obj.centroid
+    center = center_of_bounding_box(obj)
 
     return trimesh.transformations.rotation_matrix(angle, direction, center)
 
@@ -66,35 +71,29 @@ def create_combined_stl_file(result):
     # https://github.com/mikedh/trimesh/issues/365
     # https://stackoverflow.com/questions/72561243/rotating-trimesh-mesh-plane-object
     for (i, print_run) in enumerate(result):
-        print(print_run)
         uuid_ = uuid4()
         meshes = []
         scene = trimesh.Scene()
         origin = np.array([0, 0, 0])
 
         for (j, position) in enumerate(print_run):
-            print(f"Positon {j}: {position}")
             mesh = trimesh.load_mesh(position.filename)
 
-            mesh.apply_translation(origin - mesh.centroid)
-
-            mesh.apply_translation([position.x, -position.y, 0])
             mesh.apply_transform(apply_rotation(mesh, 90))
-            # mesh.apply_transform(apply_rotation(mesh, 90))
+            mesh.apply_translation(origin - center_of_bounding_box(mesh))
+            mesh.apply_translation([position.x, -position.y, 0])
 
-            # scene.add_geometry(mesh)
-            # scene.export(f"incomplete-printrun-{uuid_}-{i}_{j}.stl")
-            # combined_mesh.export(f"incomplete-printrun-{uuid_}-{j}.stl")
             meshes.append(mesh)
+
             scene.add_geometry(mesh)
+            print(scene.geometry_identifiers)
+            print("Meshes so far: ", len(meshes))
 
-            # now = datetime.now()
-            # formatted = now.strftime('%Y-%m-%d-%H:%M:%S')
-            scene.export(f"incomplete-printrun-{uuid_}.stl")
+            now = datetime.now()
+            formatted = now.strftime('%Y-%m-%d-%H_%M_%S')
+            scene.export(f"incomplete-printrun-{uuid_}-{formatted}.stl")
 
-        # combined_mesh = trimesh.util.concatenate(meshes)
-
-        print(f"Created combined stl file for print_run {i}")
         scene.apply_transform(apply_rotation(scene, 90))
-        scene.apply_translation(origin - scene.centroid)
+        # scene.apply_translation(origin - scene.centroid)
+        print(f"Exporting printrun-{uuid_}...")
         scene.export(f"printrun-{uuid_}.stl")

@@ -31,11 +31,11 @@ def process_build(build_id: str):
             mesh = trimesh.load(filename)
             x, y, z = mesh.bounding_box.extents
             for _ in range(quantity):
-                to_layout.append(Box(w=ceil(y), h=ceil(x), filename=filename))
+                to_layout.append(Box(w=ceil(y), l=ceil(x), h=ceil(z), filename=filename))
             print(f"Downloaded {filename} with dimensions (width x length): {y} mm x {x} mm")
 
     print(f"Build {build_id} has {len(to_layout)} boxes to layout.")
-    print("To layout: ", to_layout)
+    # print("To layout: ", to_layout)
 
     remaining_parts = True
     layouts = []
@@ -58,10 +58,6 @@ def process_build(build_id: str):
     return layouts
 
 
-def create_combined_stl_file(result, id):
-    pass
-
-
 def main():
     already_seen_build_ids = set()
 
@@ -80,7 +76,7 @@ def main():
             # if highest_priority_id not in already_seen_build_ids:
             already_seen_build_ids.add(highest_priority_id)
             result = process_build(highest_priority_id)
-            create_combined_stl_file(result, highest_priority_id)
+            service.create_combined_stl_file(result)
             remaining_builds.remove(highest_priority_build)
         except Exception as error:
             print(

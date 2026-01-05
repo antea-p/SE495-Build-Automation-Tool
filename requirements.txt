@@ -1,8 +1,9 @@
 requests~=2.32.3
-arrow
-trimesh
+arrow~=1.4.0
+trimesh~=4.10.1
 pyautogui~=0.9.54
 responses~=0.25.8
 pytest~=9.0.1
 opencv-python
 pyscreeze
+numpy~=2.2.6
