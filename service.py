@@ -80,12 +80,25 @@ def create_combined_stl_file(result):
             mesh = trimesh.load_mesh(position.filename)
 
             mesh.apply_transform(apply_rotation(mesh, 90))
-            mesh.apply_translation(origin - center_of_bounding_box(mesh))
-            mesh.apply_translation([position.x, -position.y, 0])
+            bounds = mesh.bounds
+            min_x = bounds[0, 0]
+            min_y = bounds[0, 1]
+            min_z = bounds[0, 2]
+            mesh.apply_translation((-min_x, -min_y, -min_z))
+            mesh.apply_translation([position.x, position.y, 0])
 
             meshes.append(mesh)
 
             scene.add_geometry(mesh)
+            bounds = mesh.bounds  # shape (2, 3): [[minx, miny, minz], [maxx, maxy, maxz]]
+            min_corner, max_corner = bounds
+
+            x, y, z = min_corner
+            w, h, d = max_corner - min_corner
+
+            print(x, y, z, w, h, d)
+            # print(f"Bounding box: [{float(x), float(y)}]")
+            print(f"Position: {position}")
             print(scene.geometry_identifiers)
             print("Meshes so far: ", len(meshes))
 
