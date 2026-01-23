@@ -12,9 +12,6 @@ RESOLUTION = pyautogui.size()
 class Chitubox:
 
     def __init__(self, path: str = r"C:\Program Files\CBD\CHITUBOX_Basic\CHITUBOX_Basic.exe"):
-        # TODO: start Chitubox and set focus
-        # self.PATH = path
-        # os.system('start "" "' + self.PATH + '"')  # https://stackoverflow.com/a/58589129
         pyautogui.PAUSE = 1.5
 
     @staticmethod
@@ -59,15 +56,9 @@ class Chitubox:
 
         self.click("No.png", region_box=astuple(REGION_BOX['NO']))
 
-
-if __name__ == '__main__':
-    chitubox = Chitubox()
-    pyautogui.sleep(10)
-    # TODO: check if there's 'restore project files prompt', or if there's report bug prompt
-    for file in os.scandir():
-        if file.name.endswith(".stl"):
-            chitubox.open_file(file.name)
-            pyautogui.sleep(2)
-            chitubox.slice()
-            chitubox.save()
-            chitubox.back_to_model_prepare()
+    def perform_automation(self, file: str):
+        self.open_file(file)
+        pyautogui.sleep(2)
+        self.slice()
+        self.save()
+        self.back_to_model_prepare()
