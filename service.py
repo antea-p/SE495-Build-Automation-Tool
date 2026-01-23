@@ -1,3 +1,4 @@
+from math import ceil
 from uuid import uuid4
 
 import arrow
@@ -6,7 +7,8 @@ import requests.models
 import trimesh
 
 import api_client
-from custom_types import Status
+from custom_types import Status, Box
+from layout import bin_packing
 
 client = api_client.ApiClient()
 
@@ -54,14 +56,49 @@ def filter_and_sort_builds(builds: requests.models.Response, sort_key: str):
     return filtered_builds
 
 
-def center_of_bounding_box(mesh):
-    return mesh.bounds.mean(axis=0)
+def download_part_files(build_id: str):
+    batches = client.get_build_details(build_id=build_id).json().get('batches')
+    all_parts = []
+    for batch in batches:
+        download = client.download_part_file(batch.get('partId'), file_name='PRE_SUPPORTED.stl')
+        quantity = batch.get('quantity')
+        filename = f'{build_id}-{batch.get('partId')}.stl'
+        with open(filename, 'wb') as f:
+            f.write(download.content)
+
+            mesh = trimesh.load(filename)
+            x, y, z = mesh.bounding_box.extents
+            for _ in range(quantity):
+                all_parts.append(Box(w=ceil(y), l=ceil(x), h=ceil(z), filename=filename))
+            print(f"Downloaded {filename} with dimensions (width x length): {y} mm x {x} mm")
+    return all_parts
 
 
-def apply_rotation(obj, degrees):
+def process_build(build_id: str):
+    print(f"Processing {build_id}")
+    to_layout = download_part_files(build_id)
+
+    remaining_parts = True
+    layouts = []
+    result = bin_packing(to_layout)
+
+    while remaining_parts:
+        layout_ = result.get('occupied')
+        unfit_boxes = result.get('unfit_boxes')
+        layouts.append(layout_)
+        if not unfit_boxes:
+            remaining_parts = False
+        else:
+            result = bin_packing(unfit_boxes)
+
+    filenames = create_combined_stl_file(layouts)
+    return filenames
+
+
+def apply_rotation(mesh, degrees):
     angle = np.radians(degrees)
     direction = [0, 0, 1]
-    center = center_of_bounding_box(obj)
+    center = mesh.bounds.mean(axis=0)  # center of boundingbox
 
     return trimesh.transformations.rotation_matrix(angle, direction, center)
 
@@ -96,10 +133,7 @@ def create_combined_stl_file(result):
             w, h, d = max_corner - min_corner
 
             print(x, y, z, w, h, d)
-            # print(f"Bounding box: [{float(x), float(y)}]")
-            print(f"Position: {position}")
             print(scene.geometry_identifiers)
-            print("Meshes so far: ", len(meshes))
 
         scene.apply_transform(apply_rotation(scene, 90))
         print(f"Exporting printrun-{uuid_}...")
