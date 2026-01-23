@@ -7,7 +7,7 @@ MAX_LENGTH = 198
 
 
 # https://observablehq.com/@mourner/simple-rectangle-packing
-def bin_packing(boxes: List[Box]) -> list | None:
+def bin_packing(boxes: List[Box]) -> dict | None:
     boxes.sort(key=lambda x: x.w * x.l, reverse=True)
 
     unfit_boxes = boxes.copy()
@@ -53,7 +53,7 @@ def bin_packing(boxes: List[Box]) -> list | None:
                 slot.l -= box.l
             break
 
-    return [occupied, empty_slots, unfit_boxes]
+    return {"occupied": occupied, "empty_slots": empty_slots, "unfit_boxes": unfit_boxes}
 
 
 if __name__ == '__main__':

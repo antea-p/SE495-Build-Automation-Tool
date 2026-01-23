@@ -1,4 +1,5 @@
 from math import ceil
+from pathlib import Path
 from typing import Any
 
 import trimesh
@@ -77,10 +78,9 @@ def main():
         try:
             # if highest_priority_id not in already_seen_build_ids:
             already_seen_build_ids.add(highest_priority_id)
-            result = process_build(highest_priority_id)
-            filenames = service.create_combined_stl_file(result)
-            for file in filenames:
-                chitubox.perform_automation(file)
+            filenames = service.process_build(highest_priority_id)
+            for filename in filenames:
+                chitubox.perform_automation(Path(filename))
             remaining_builds.remove(highest_priority_build)
         except Exception as error:
             print(
