@@ -4,10 +4,12 @@ from typing import Any
 import trimesh
 
 import api_client
+import chitubox as cb
 import service
 from layout import Box, bin_packing
 
 client = api_client.ApiClient()
+chitubox = cb.Chitubox()
 
 
 def get_filtered_builds_3_days_span() -> list[Any] | None:
@@ -76,7 +78,9 @@ def main():
             # if highest_priority_id not in already_seen_build_ids:
             already_seen_build_ids.add(highest_priority_id)
             result = process_build(highest_priority_id)
-            service.create_combined_stl_file(result)
+            filenames = service.create_combined_stl_file(result)
+            for file in filenames:
+                chitubox.perform_automation(file)
             remaining_builds.remove(highest_priority_build)
         except Exception as error:
             print(
