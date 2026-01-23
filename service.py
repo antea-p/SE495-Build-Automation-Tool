@@ -1,4 +1,3 @@
-from datetime import datetime
 from uuid import uuid4
 
 import arrow
@@ -70,11 +69,11 @@ def apply_rotation(obj, degrees):
 def create_combined_stl_file(result):
     # https://github.com/mikedh/trimesh/issues/365
     # https://stackoverflow.com/questions/72561243/rotating-trimesh-mesh-plane-object
+    filenames = []
     for (i, print_run) in enumerate(result):
         uuid_ = uuid4()
         meshes = []
         scene = trimesh.Scene()
-        origin = np.array([0, 0, 0])
 
         for (j, position) in enumerate(print_run):
             mesh = trimesh.load_mesh(position.filename)
@@ -90,7 +89,7 @@ def create_combined_stl_file(result):
             meshes.append(mesh)
 
             scene.add_geometry(mesh)
-            bounds = mesh.bounds  # shape (2, 3): [[minx, miny, minz], [maxx, maxy, maxz]]
+            bounds = mesh.bounds  # [[minx, miny, minz], [maxx, maxy, maxz]]
             min_corner, max_corner = bounds
 
             x, y, z = min_corner
@@ -102,11 +101,10 @@ def create_combined_stl_file(result):
             print(scene.geometry_identifiers)
             print("Meshes so far: ", len(meshes))
 
-            now = datetime.now()
-            formatted = now.strftime('%Y-%m-%d-%H_%M_%S')
-            scene.export(f"incomplete-printrun-{uuid_}-{formatted}.stl")
-
         scene.apply_transform(apply_rotation(scene, 90))
-        # scene.apply_translation(origin - scene.centroid)
         print(f"Exporting printrun-{uuid_}...")
-        scene.export(f"printrun-{uuid_}.stl")
+        export_filename = f"printrun-{uuid_}.stl"
+        filenames.append(export_filename)
+        scene.export(export_filename)
+
+    return filenames
