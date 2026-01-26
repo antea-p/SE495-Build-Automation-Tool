@@ -40,12 +40,22 @@ class Chitubox:
         pyautogui.hotkey(*HOTKEYS['SLICE'])
 
     def save(self):
-        self.click("Slice_v2.png", region_box=astuple(REGION_BOX['SLICE']))
+        self.click("SliceAndSave.png", region_box=astuple(REGION_BOX['SLICE']))
         pyautogui.sleep(5)
 
-        pyautogui.hotkey(*HOTKEYS['SAVE'])
-        pyautogui.press('enter')
-        pyautogui.hotkey(*HOTKEYS['CANCEL_PROMPT'])
+        completed = False
+        while not completed:
+            # https://stackoverflow.com/a/52237162
+            result = pyautogui.getWindowsWithTitle("Save slice file")
+            if result:
+                completed = True
+                pyautogui.press('enter')
+                print("Slicing finished")
+                pyautogui.sleep(2)
+
+                pyautogui.hotkey(*HOTKEYS['CANCEL_PROMPT'])
+                self.back_to_model_prepare()
+                pyautogui.hotkey(*HOTKEYS['NEW_PROJECT'])
 
     def back_to_model_prepare(self):
         self.click("BackToModelPrepare.png", region_box=astuple(REGION_BOX['BACK_TO_MODEL_PREPARE']))
@@ -60,12 +70,12 @@ class Chitubox:
     def perform_automation(self, file: Path):
         self.open_file(file.name)
         pyautogui.sleep(2)
-        size_mb = file.stat().st_size / 1000000
-        print(f"Size of {file.name}: {size_mb} MB")
-        if size_mb > 100:
-            pyautogui.PAUSE = 15
+        # size_mb = file.stat().st_size / 1000000
+        # print(f"Size of {file.name}: {size_mb} MB")
+        # if size_mb > 100:
+        #     pyautogui.PAUSE = 15
         self.slice()
         self.save()
         pyautogui.PAUSE = 1.5
 
-        self.back_to_model_prepare()
+        # self.back_to_model_prepare()
