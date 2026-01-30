@@ -70,12 +70,5 @@ class Chitubox:
     def perform_automation(self, file: Path):
         self.open_file(file.name)
         pyautogui.sleep(2)
-        # size_mb = file.stat().st_size / 1000000
-        # print(f"Size of {file.name}: {size_mb} MB")
-        # if size_mb > 100:
-        #     pyautogui.PAUSE = 15
         self.slice()
         self.save()
-        pyautogui.PAUSE = 1.5
-
-        # self.back_to_model_prepare()
