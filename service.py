@@ -13,7 +13,7 @@ from layout import bin_packing
 client = api_client.ApiClient()
 
 
-def is_build_eligible(build_: dict) -> bool:
+def _is_build_eligible(build_: dict) -> bool:
     if build_.get('status') != Status.NEW.name:
         return False
 
@@ -48,7 +48,7 @@ def filter_and_sort_builds(builds: requests.models.Response, sort_key: str):
         return None
 
     for build in builds.json():
-        if is_build_eligible(build):
+        if _is_build_eligible(build):
             filtered_builds.append(build)
 
     filtered_builds.sort(key=lambda x: x.get(sort_key))
@@ -91,7 +91,7 @@ def process_build(build_id: str):
         else:
             result = bin_packing(unfit_boxes)
 
-    filenames = create_combined_stl_file(layouts)
+    filenames = create_combined_stl_file(build_id, layouts)
     return filenames
 
 
@@ -103,7 +103,7 @@ def apply_rotation(mesh, degrees):
     return trimesh.transformations.rotation_matrix(angle, direction, center)
 
 
-def create_combined_stl_file(result):
+def create_combined_stl_file(build_id: str, result: dict):
     # https://github.com/mikedh/trimesh/issues/365
     # https://stackoverflow.com/questions/72561243/rotating-trimesh-mesh-plane-object
     filenames = []
@@ -136,8 +136,8 @@ def create_combined_stl_file(result):
             print(scene.geometry_identifiers)
 
         scene.apply_transform(apply_rotation(scene, 90))
-        print(f"Exporting printrun-{uuid_}...")
-        export_filename = f"printrun-{uuid_}.stl"
+        export_filename = f"printrun-{build_id}-batch-{i}-{arrow.now().int_timestamp}.stl"
+        print(f"Exporting {export_filename}")
         filenames.append(export_filename)
         scene.export(export_filename)
 
