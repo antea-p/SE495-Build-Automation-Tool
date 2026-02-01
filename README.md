@@ -13,6 +13,8 @@
    printer settings, or
    you can customise them.
 5. Open Settings -> Function, and disable **Apply auto-layout to imported models**.
-6. Run `python main.py`.
+6. Close and re-open CHITUBOX. Make sure that you select **Ignore the current version upgrade** and then Cancel the
+   update prompt.
+7. Run `python main.py`.
 
 **Note**: The project wasn't tested on Unix.
