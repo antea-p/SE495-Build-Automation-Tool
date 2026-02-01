@@ -60,5 +60,6 @@ REGION_BOX = {
     "SAVING_SLICE": Region(w * 0.4, h * 0.74, w * 0.58, h * 0.82),
     "BACK_TO_MODEL_PREPARE": Region(w * 0.45, 0, w * 0.5, h * 0.05),
     "NO": Region(w * 0.5, h * 0.5, w * 0.6, h * 0.55),
-    "BUG_FEEDBACK": Region(w * 0.3, h * 0.1, w * 0.4, h * 0.2)
+    "X_CLOSE": Region(w * 0.90, h * 0.05, w, h * 0.1),
+    "OPEN_FILE": Region(w * 0.25, h * 0.04, w * 0.40, h * 0.15),
 }
