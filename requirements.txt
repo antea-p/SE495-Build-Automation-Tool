@@ -4,6 +4,8 @@ trimesh~=4.10.1
 pyautogui~=0.9.54
 responses~=0.25.8
 pytest~=9.0.1
+pytest-mock
 opencv-python
 pyscreeze
 numpy~=2.2.6
+matplotlib
