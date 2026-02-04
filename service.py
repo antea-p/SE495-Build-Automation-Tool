@@ -1,5 +1,4 @@
 from math import ceil
-from uuid import uuid4
 
 import arrow
 import numpy as np
@@ -9,6 +8,7 @@ import trimesh
 import api_client
 from custom_types import Status, Box
 from layout import bin_packing
+from visualiser import visualise
 
 client = api_client.ApiClient()
 
@@ -80,7 +80,9 @@ def process_build(build_id: str):
 
     remaining_parts = True
     layouts = []
+    i = 0
     result = bin_packing(to_layout)
+    visualise(result, f"./layouts/{build_id}-{i}.png")
 
     while remaining_parts:
         layout_ = result.get('occupied')
@@ -89,7 +91,9 @@ def process_build(build_id: str):
         if not unfit_boxes:
             remaining_parts = False
         else:
+            i += 1
             result = bin_packing(unfit_boxes)
+            visualise(result, f"./layouts/{build_id}-{i}.png")
 
     filenames = create_combined_stl_file(build_id, layouts)
     return filenames
@@ -108,7 +112,6 @@ def create_combined_stl_file(build_id: str, result: dict):
     # https://stackoverflow.com/questions/72561243/rotating-trimesh-mesh-plane-object
     filenames = []
     for (i, print_run) in enumerate(result):
-        uuid_ = uuid4()
         meshes = []
         scene = trimesh.Scene()
 
