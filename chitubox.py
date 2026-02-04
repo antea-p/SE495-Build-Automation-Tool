@@ -85,7 +85,3 @@ class Chitubox:
 
     def show_message(self, message: str):
         pyautogui.alert(text=message, title="Info", button="OK")
-
-
-if __name__ == '__main__':
-    chitubox = Chitubox()

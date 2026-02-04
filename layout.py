@@ -54,22 +54,3 @@ def bin_packing(boxes: List[Box]) -> dict | None:
             break
 
     return {"occupied": occupied, "empty_slots": empty_slots, "unfit_boxes": unfit_boxes}
-
-
-if __name__ == '__main__':
-    boxes = [
-        Box(80, 400),
-        Box(100, 100),
-        Box(250, 100),
-        Box(400, 80),
-        Box(60, 60),
-        Box(60, 60),
-        Box(60, 60),
-        Box(20, 50),
-        Box(20, 50),
-        Box(20, 50),
-        Box(10, 10),
-        Box(10, 10),
-        Box(5, 5),
-    ]
-    bin_packing(boxes)

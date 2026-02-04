@@ -1,11 +1,9 @@
 from pathlib import Path
 from typing import Any
 
-import api_client
 import chitubox as cb
 import service
 
-client = api_client.ApiClient()
 chitubox = cb.Chitubox()
 
 
@@ -31,7 +29,6 @@ def main():
         highest_priority_id = highest_priority_build['id']
 
         try:
-            # if highest_priority_id not in already_seen_build_ids:
             already_seen_build_ids.add(highest_priority_id)
             filenames = service.process_build(highest_priority_id)
             for filename in filenames:
