@@ -1,9 +1,11 @@
+import operator
 from math import ceil
 
 import arrow
 import numpy as np
 import requests.models
 import trimesh
+from trimesh import Trimesh, Scene
 
 import api_client
 from custom_types import Status, Box
@@ -15,9 +17,6 @@ client = api_client.ApiClient()
 
 def _is_build_eligible(build_: dict) -> bool:
     if build_.get('status') != Status.NEW.name:
-        return False
-
-    if 'slicePath' not in build_:
         return False
 
     if 'batches' not in build_ or len(build_.get('batches')) == 0:
@@ -32,16 +31,25 @@ def _is_build_eligible(build_: dict) -> bool:
     return True
 
 
-def get_build_jobs_between(days_in_past: int, days_in_future: int):
+def get_build_jobs_between(days_in_past: int, days_in_future: int) -> requests.Response:
+    """
+    Gets build jobs in [days_in_past, days_in_future] timeline, where days_in_past is any integer ∈ (-∞, 0]
+    and days_in_future is any integer ∈ [0, +∞). For example, if days_in_past = -2 and days_in_future = 0,
+    it will get all build jobs with date between 2 days ago and today.
+    """
     now = arrow.now()
-    n_days_ago = now.shift(days=days_in_past)
-    in_n_days = now.shift(days=days_in_future)
+    if days_in_past > days_in_future:
+        raise ValueError("'Days in past' shouldn't be less than 'days in future'.")
+    if days_in_future < 0:
+        raise ValueError("'Days in future' shouldn't be less than 0.")
 
+    n_days_ago = now.shift(days=days_in_past) if days_in_past < 0 else now
+    in_n_days = now.shift(days=days_in_future) if days_in_future > 0 else now
     return client.get_build_jobs(n_days_ago.format('YYYY-MM-DD[T]HH:mm:ss[Z]'),
                                  in_n_days.format('YYYY-MM-DD[T]HH:mm:ss[Z]'))
 
 
-def filter_and_sort_builds(builds: requests.models.Response, sort_key: str):
+def filter_and_sort_builds(builds: requests.models.Response, sort_key: str) -> list[requests.Response] | None:
     filtered_builds = []
 
     if not builds.json():
@@ -51,12 +59,16 @@ def filter_and_sort_builds(builds: requests.models.Response, sort_key: str):
         if _is_build_eligible(build):
             filtered_builds.append(build)
 
-    filtered_builds.sort(key=lambda x: x.get(sort_key))
+    # https://note.nkmk.me/en/python-dict-list-sort/#specify-operatoritemgetter-for-the-key-argument
+    try:
+        filtered_builds.sort(key=operator.itemgetter(sort_key))
+    except KeyError:
+        raise ValueError(f"Sort key {sort_key} doesn't exist.")
 
     return filtered_builds
 
 
-def download_part_files(build_id: str):
+def download_part_files(build_id: str) -> list[Box]:
     batches = client.get_build_details(build_id=build_id).json().get('batches')
     all_parts = []
     for batch in batches:
@@ -67,14 +79,14 @@ def download_part_files(build_id: str):
             f.write(download.content)
 
             mesh = trimesh.load(filename)
-            x, y, z = mesh.bounding_box.extents
+            x, y, z = mesh.extents
             for _ in range(quantity):
-                all_parts.append(Box(w=ceil(y), l=ceil(x), h=ceil(z), filename=filename))
+                all_parts.append(Box(w=ceil(y), l=ceil(x), filename=filename))
             print(f"Downloaded {filename} with dimensions (width x length): {y} mm x {x} mm")
     return all_parts
 
 
-def process_build(build_id: str):
+def process_build(build_id: str) -> list[str]:
     print(f"Processing {build_id}")
     to_layout = download_part_files(build_id)
 
@@ -99,7 +111,7 @@ def process_build(build_id: str):
     return filenames
 
 
-def apply_rotation(mesh, degrees):
+def _apply_rotation(mesh: Trimesh | Scene, degrees: int):
     angle = np.radians(degrees)
     direction = [0, 0, 1]
     center = mesh.bounds.mean(axis=0)  # center of boundingbox
@@ -107,7 +119,7 @@ def apply_rotation(mesh, degrees):
     return trimesh.transformations.rotation_matrix(angle, direction, center)
 
 
-def create_combined_stl_file(build_id: str, result: dict):
+def create_combined_stl_file(build_id: str, result: dict) -> list[str]:
     # https://github.com/mikedh/trimesh/issues/365
     # https://stackoverflow.com/questions/72561243/rotating-trimesh-mesh-plane-object
     filenames = []
@@ -118,7 +130,7 @@ def create_combined_stl_file(build_id: str, result: dict):
         for (j, position) in enumerate(print_run):
             mesh = trimesh.load_mesh(position.filename)
 
-            mesh.apply_transform(apply_rotation(mesh, 90))
+            mesh.apply_transform(_apply_rotation(mesh, 90))
             bounds = mesh.bounds
             min_x = bounds[0, 0]
             min_y = bounds[0, 1]
@@ -138,7 +150,7 @@ def create_combined_stl_file(build_id: str, result: dict):
             print(x, y, z, w, h, d)
             print(scene.geometry_identifiers)
 
-        scene.apply_transform(apply_rotation(scene, 90))
+        scene.apply_transform(_apply_rotation(scene, 90))
         export_filename = f"printrun-{build_id}-batch-{i}-{arrow.now().int_timestamp}.stl"
         print(f"Exporting {export_filename}")
         filenames.append(export_filename)
