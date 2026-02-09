@@ -17,7 +17,6 @@ class Status(Enum):
 class Box:
     w: int
     l: int
-    h: int = None
     filename: str = None
 
 

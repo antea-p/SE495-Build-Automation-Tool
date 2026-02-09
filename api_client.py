@@ -11,7 +11,8 @@ class ApiClient:
         print("Initializing...")
         self.BASE_URL = base_url
 
-    def get_build_jobs(self, date1: Optional[str] = None, date2: Optional[str] = None, status: Optional[Status] = None):
+    def get_build_jobs(self, date1: Optional[str] = None, date2: Optional[str] = None,
+                       status: Optional[Status] = None) -> requests.Response:
         url = f"{self.BASE_URL}/api/production_builds"
         if date1 and date2:
             url += f"?startTime_gte={date1}&startTime_lte={date2}"
@@ -21,20 +22,20 @@ class ApiClient:
         data = requests.get(url)
         return data
 
-    def get_build_details(self, build_id: str):
+    def get_build_details(self, build_id: str) -> requests.Response:
         return requests.get(f"{self.BASE_URL}/api/production_builds/{build_id}")
 
-    def update_status(self, build_id: str, new_status: Status):
+    def update_status(self, build_id: str, new_status: Status) -> requests.Response:
         body = {"status": new_status.name}
         return requests.patch(f"{self.BASE_URL}/api/production_builds/{build_id}", json=body)
 
-    def upload_slice_file(self, build_id: str, file_path: str):
+    def upload_slice_file(self, build_id: str, file_path: str) -> requests.Response:
         payload = {"file": file_path}
 
         return requests.post(f"{self.BASE_URL}/api/production_builds/{build_id}/slice", files=payload)
 
-    def download_slice_file(self, file_name: str):
+    def download_slice_file(self, file_name: str) -> requests.Response:
         return requests.get(f"{self.BASE_URL}/files/slices/{file_name}")
 
-    def download_part_file(self, part_id: str, file_name: str):
+    def download_part_file(self, part_id: str, file_name: str) -> requests.Response:
         return requests.get(f"{self.BASE_URL}/files/parts/{part_id}/{file_name}")
