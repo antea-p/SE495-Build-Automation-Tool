@@ -15,7 +15,7 @@ class Chitubox:
         pyautogui.PAUSE = 1.5
         self._start(path)
 
-    def _start(self, path):
+    def _start(self, path: str):
         # https://stackoverflow.com/a/58589129
         os.system('start "" "' + path + '"')
         pyautogui.sleep(10)  # in case of slow computer
@@ -36,7 +36,7 @@ class Chitubox:
         except pyautogui.PyAutoGUIException as e:
             if full_path.exists():
                 print(f"App found {full_path}")
-            print(f"Couldn't click {full_path}. Exception details: {e}")
+            print(f"Couldn't click {full_path}.")
 
     def open_file(self, filename: str):
         pyautogui.hotkey(*HOTKEYS['OPEN'])

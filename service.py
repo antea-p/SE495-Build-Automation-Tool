@@ -82,7 +82,7 @@ def download_part_files(build_id: str) -> list[Box]:
             x, y, z = mesh.extents
             for _ in range(quantity):
                 all_parts.append(Box(w=ceil(y), l=ceil(x), filename=filename))
-            print(f"Downloaded {filename} with dimensions (width x length): {y} mm x {x} mm")
+            print(f"Downloaded {filename} with dimensions (width x length): {y:.2f} mm x {x:.sl2f} mm")
     return all_parts
 
 
@@ -94,7 +94,7 @@ def process_build(build_id: str) -> list[str]:
     layouts = []
     i = 0
     result = bin_packing(to_layout)
-    visualise(result, f"./layouts/{build_id}-{i}.png")
+    visualise(result.get('occupied'), f"./layouts/{build_id}-{i}.png")
 
     while remaining_parts:
         layout_ = result.get('occupied')
@@ -105,7 +105,7 @@ def process_build(build_id: str) -> list[str]:
         else:
             i += 1
             result = bin_packing(unfit_boxes)
-            visualise(result, f"./layouts/{build_id}-{i}.png")
+            visualise(result.get('occupied'), f"./layouts/{build_id}-{i}.png")
 
     filenames = create_combined_stl_file(build_id, layouts)
     return filenames
@@ -141,14 +141,6 @@ def create_combined_stl_file(build_id: str, result: dict) -> list[str]:
             meshes.append(mesh)
 
             scene.add_geometry(mesh)
-            bounds = mesh.bounds  # [[minx, miny, minz], [maxx, maxy, maxz]]
-            min_corner, max_corner = bounds
-
-            x, y, z = min_corner
-            w, h, d = max_corner - min_corner
-
-            print(x, y, z, w, h, d)
-            print(scene.geometry_identifiers)
 
         scene.apply_transform(_apply_rotation(scene, 90))
         export_filename = f"printrun-{build_id}-batch-{i}-{arrow.now().int_timestamp}.stl"

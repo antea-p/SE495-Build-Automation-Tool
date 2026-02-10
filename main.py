@@ -39,7 +39,7 @@ def main():
                 f"Build for {highest_priority_id} failed, will skip to next eligible build. Error message: {error}")
             continue
 
-    chitubox.show_message("Completed the work. Please verify there were no errors.")
+    # chitubox.show_message("Completed the work. Please verify there were no errors.")
 
 
 if __name__ == "__main__":
