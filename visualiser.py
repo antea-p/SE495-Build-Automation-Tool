@@ -26,8 +26,7 @@ def visualise(packed: list[Position], filename: str) -> None:
 
         # https://pythonguides.com/matplotlib-plot-multiple-rectangles/
         ax.add_patch(
-            plt.Rectangle((box.x, box.y), box.w, box.l, linewidth=2, edgecolor='black', facecolor=color, alpha=0.9,
-                          zorder=2))
+            plt.Rectangle((box.x, box.y), box.w, box.l, linewidth=2, edgecolor='black', facecolor=color, alpha=0.9))
         ax.text(box.x + box.w / 2, box.y + box.l / 2, f"{box.w} x {box.l}", ha='center', va='center', weight='bold')
 
     plt.xlim(0, MAX_WIDTH)
@@ -37,7 +36,7 @@ def visualise(packed: list[Position], filename: str) -> None:
     plt.ylabel('Duljina')
 
     packed_area = _area(packed)
-    plt.title(f'Iskorištenost: {packed_area / (MAX_WIDTH * MAX_LENGTH) * 100:.2f}%')
+    plt.title(f'Iskorištenost: {packed_area / (MAX_WIDTH * MAX_LENGTH) * 100:.2f}%', weight='bold')
     plt.grid(linestyle='--', alpha=0.5)
     plt.tight_layout()
 

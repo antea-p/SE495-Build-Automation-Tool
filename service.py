@@ -82,7 +82,7 @@ def download_part_files(build_id: str) -> list[Box]:
             x, y, z = mesh.extents
             for _ in range(quantity):
                 all_parts.append(Box(w=ceil(y), l=ceil(x), filename=filename))
-            print(f"Downloaded {filename} with dimensions (width x length): {y:.2f} mm x {x:.sl2f} mm")
+            print(f"Downloaded {filename} with dimensions (width x length): {y:.2f} mm x {x:.2f} mm")
     return all_parts
 
 
