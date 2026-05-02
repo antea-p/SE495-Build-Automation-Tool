@@ -60,5 +60,5 @@ REGION_BOX = {
     "BACK_TO_MODEL_PREPARE": Region(w * 0.45, 0, w * 0.5, h * 0.05),
     "NO": Region(w * 0.5, h * 0.5, w * 0.6, h * 0.55),
     "X_CLOSE": Region(w * 0.90, h * 0.05, w, h * 0.1),
-    "OPEN_FILE": Region(w * 0.25, h * 0.04, w * 0.40, h * 0.15),
+    "OPEN_FILE": Region(w * 0.20, h * 0.04, w * 0.40, h * 0.15),
 }

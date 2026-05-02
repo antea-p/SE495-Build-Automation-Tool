@@ -20,7 +20,7 @@ class Chitubox:
         os.system('start "" "' + path + '"')
         pyautogui.sleep(10)  # in case of slow computer
         self.click("X.png", region_box=astuple(REGION_BOX['X_CLOSE']))
-        self.click("OpenFile.png", region_box=astuple(REGION_BOX['OPEN_FILE']))
+        self.click("OpenFileNew.png", region_box=astuple(REGION_BOX['OPEN_FILE']))
 
     @staticmethod
     def click(filename: str, confidence: float = 0.7, region_box=None):
