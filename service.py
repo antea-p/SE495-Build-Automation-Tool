@@ -108,6 +108,7 @@ def process_build(build_id: str) -> list[str]:
             visualise(result.get('occupied'), f"./layouts/{build_id}-{i}.png")
 
     filenames = create_combined_stl_file(build_id, layouts)
+    client.update_status(build_id, Status.BUILT)
     return filenames
 
 
@@ -119,7 +120,7 @@ def _apply_rotation(mesh: Trimesh | Scene, degrees: int):
     return trimesh.transformations.rotation_matrix(angle, direction, center)
 
 
-def create_combined_stl_file(build_id: str, result: dict) -> list[str]:
+def create_combined_stl_file(build_id: str, result: list) -> list[str]:
     # https://github.com/mikedh/trimesh/issues/365
     # https://stackoverflow.com/questions/72561243/rotating-trimesh-mesh-plane-object
     filenames = []
