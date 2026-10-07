@@ -1,6 +1,14 @@
 # SE495-Build-Automation-Tool
 
-## Instructions
+3D build automation - it slices! It dices! Just (half) kidding. It downloads order part files, lays them out in CHITUBOX's print bed and slices them so they can be sent to printer without breaking a sweat. Note: this version is made to work with mock API to avoid leaking proprietary code. 
+
+## Motivation
+The project idea came up while I was looking for a real life problem to solve for bachelor's thesis. I didn't want to waste it by playing it safe and I was very eager to tackle something that is just outside of my comfort zone. The idea transpired during internship at 3DC Ltd when my mentor told me about how the employees spend 2 hours every work day just on daily tasks of preparing printers, slicing the order files, and sending them to printer. 
+
+## Quick Start
+
+### Usage
+Note: company behind CHITUBOX sometimes permanently disables downloading of old version and basically forces you to download newer ones. This happened to me once and while all hotkeys worked fine, I had to replace 1 or 2 UI element screenshots. 
 
 1. Prerequisite tools:
     - Python 3.11.7+ (make sure it's included in PATH environment variable)
@@ -23,4 +31,7 @@
     messed up. If you need to stop the automation, drag the mouse to any of the screen edges, e.g. top left (0, 0),
     which will activate pyautogui failsafe mechanism.
 
-**Note**: The project wasn't tested on Unix.
+
+## Contributing
+This project is not really intended for further contribution. You can clone the project and integrate it with API that provides access to builds and the respective files. Note that 
+
